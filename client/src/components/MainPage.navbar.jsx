@@ -64,6 +64,7 @@ const Navbar = () => {
                 >
                     connectly
                 </h1>
+
                 <div>
                     <form
                         onSubmit={handleSearch}
@@ -77,39 +78,34 @@ const Navbar = () => {
                             className="bg-transparent outline-none text-sm text-slate-200 placeholder:text-slate-400"
                         />
                     </form>
-                        <div className="absolute mt-2 w-[300px] max-h-[300px] overflow-y-auto bg-[#1f2937] border border-white/10 rounded-xl shadow-lg z-50">
-                            {
-                                find && users.map(value => {
-                                    return (
-                                        <div 
-                                            key={value.id}
-                                            className="flex items-center gap-3 px-3 py-2 hover:bg-white/5 transition cursor-pointer border-b border-white/5 last:border-none"
-                                        >
-                                            <img 
-                                                src={value.photo} 
-                                                className="w-8 h-8 rounded-full object-cover"
-                                            />
 
-                                            <div 
-                                                className="flex-1"
-                                                onClick={() => selectProfile(value.id)}
-                                            >
-                                                <h1 className="text-sm text-slate-200">
-                                                    {value.name} {value.lastname}
-                                                </h1>
-                                            </div>
-
-                                            <button 
-                                                onClick={() => setFind(false)}
-                                                className="text-slate-400 hover:text-red-400 text-sm"
-                                            >
-                                                ✕
-                                            </button>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
+                    <div className="hidden md:block absolute mt-2 w-[300px] max-h-[300px] overflow-y-auto bg-[#1f2937] border border-white/10 rounded-xl shadow-lg z-50">
+                        {find && users.map(value => (
+                            <div
+                                key={value.id}
+                                className="flex items-center gap-3 px-3 py-2 hover:bg-white/5 transition cursor-pointer border-b border-white/5 last:border-none"
+                            >
+                                <img
+                                    src={value.photo}
+                                    className="w-8 h-8 rounded-full object-cover"
+                                />
+                                <div
+                                    className="flex-1"
+                                    onClick={() => selectProfile(value.id)}
+                                >
+                                    <h1 className="text-sm text-slate-200">
+                                        {value.name} {value.lastname}
+                                    </h1>
+                                </div>
+                                <button
+                                    onClick={() => setFind(false)}
+                                    className="text-slate-400 hover:text-red-400 text-sm"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className="hidden md:flex gap-6 text-sm text-slate-300">
@@ -148,10 +144,36 @@ const Navbar = () => {
                             type="text"
                             placeholder="Search profiles..."
                             value={search}
-                            onChange={(e) => setSearch(e.target.value)}
+                            onChange={handleSearch}
                             className="bg-transparent outline-none text-sm text-slate-200 placeholder:text-slate-400 w-full"
                         />
                     </form>
+
+                    {find && users.map(value => (
+                        <div
+                            key={value.id}
+                            className="flex items-center gap-3 px-3 py-2 bg-[#1f2937] hover:bg-white/5 transition cursor-pointer border-b border-white/5 last:border-none rounded-lg"
+                        >
+                            <img
+                                src={value.photo}
+                                className="w-8 h-8 rounded-full object-cover"
+                            />
+                            <div
+                                className="flex-1"
+                                onClick={() => { selectProfile(value.id); setOpen(false); }}
+                            >
+                                <h1 className="text-sm text-slate-200">
+                                    {value.name} {value.lastname}
+                                </h1>
+                            </div>
+                            <button
+                                onClick={() => setFind(false)}
+                                className="text-slate-400 hover:text-red-400 text-sm"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    ))}
 
                     <button className="text-left hover:text-indigo-400" onClick={() => navigate('/mainpage')}>Profile</button>
                     <button className="text-left hover:text-indigo-400" onClick={() => navigate('/frineds')}>Friends</button>
