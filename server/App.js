@@ -69,8 +69,14 @@ io.on("connection", (socket) =>{
 app.use(handleError);
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(() =>{
-        server.listen(process.env.PORT, () =>{
-            console.log(`Server is running on port ${process.env.PORT}`)
-        })
-    }).catch(() => console.log("not running server"))
+    .then(() => {
+        console.log("Mongo connected");
+
+        server.listen(process.env.PORT, () => {
+            console.log(`Server is running on port ${process.env.PORT}`);
+        });
+
+    })
+    .catch((err) => {
+        console.log("MONGO ERROR:", err);
+    });
