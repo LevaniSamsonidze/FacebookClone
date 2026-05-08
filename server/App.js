@@ -26,6 +26,12 @@ app.use(express.json());
 
 app.use("/imgs", express.static("imgs"));
 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: "server start"
+    });
+});
+
 app.use("/api", authRouter);
 app.use("/api", postRouter)
 app.use("/api", commentRoute)
