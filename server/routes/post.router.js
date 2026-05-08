@@ -2,7 +2,7 @@ const express = require("express");
 const verifyToken = require("../middleware/jwt.middleware");
 const { createPost, getPost, deletePost, editPost } = require("../controllers/Post.controller");
 const { uploadPost } = require("../middleware/Multer.middleware");
-const { getPosts, likePost, likeHeck } = require("../controllers/posts.controller");
+const { getPosts, likePost } = require("../controllers/Posts.controller");
 
 const postRouter = express.Router()
 
