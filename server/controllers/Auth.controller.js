@@ -38,7 +38,7 @@ const verifyGmail = catchAsync(async(req, res, next) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
     await resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: process.env.GMAIL,
         to: gmail,
         subject: 'Verification Code',
         text: `Your verification code is ${code}`
