@@ -36,12 +36,12 @@ const verifyGmail = catchAsync(async(req, res, next) => {
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    
+
     await resend.emails.send({
-        from: "tgmail871@gmail.com",
+        from: 'onboarding@resend.dev',
         to: gmail,
-        subject: 'Verification Code',
-        text: `Your verification code is ${code}`
+        subject: 'Hello World',
+        html: 'gamarjoba gamarjoba gamarjpbaaa!!!'
     });
 
     res.status(200).json({
