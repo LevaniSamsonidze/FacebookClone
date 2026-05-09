@@ -28,12 +28,16 @@ const SignUp = async (req, res) =>{
 
 const verifyGmail = catchAsync(async(req, res, next) => {
     const { gmail } = req.body;
+    console.log("verifyGmail called", gmail); // ← დაამატე
+    
     const code = Math.floor(100000 + Math.random() * 900000);
+    console.log("code generated", code); // ← დაამატე
 
     const user = await User.findOne({ gmail });
     if (user) {
         return next(new AppError(`This ${gmail} user is already registered.`, 400));
     }
+
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -42,17 +46,11 @@ const verifyGmail = catchAsync(async(req, res, next) => {
         }
     })
 
-    const gamilOptions = {
-        from: process.env.GMAIL,
-        to: gmail,
-        subject: "Verification Code",
-        text: `Your verification code is ${code}`
-    }
+    console.log("sending mail to", gmail); // ← დაამატე
     await transporter.sendMail(gamilOptions);
-    res.status(200).json({
-        ok: true,
-        code
-    });
+    console.log("mail sent!"); // ← დაამატე
+    
+    res.status(200).json({ ok: true, code });
 });
 
 const Login = catchAsync(async(req, res, next) =>{
