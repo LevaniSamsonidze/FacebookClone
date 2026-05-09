@@ -26,34 +26,42 @@ const SignUp = async (req, res) =>{
 }
 
 
-const verifyGmail = catchAsync(async(req, res, next) => {
-    const { gmail } = req.body;
-    const code = Math.floor(100000 + Math.random() * 900000);
+const verifyGmail = async(req, res, next) => {
+    try {
+        const { gmail } = req.body;
+        console.log("verifyGmail called", gmail);
+        const code = Math.floor(100000 + Math.random() * 900000);
 
-    const user = await User.findOne({ gmail });
-    if (user) {
-        return next(new AppError(`This ${gmail} user is already registered.`, 400));
-    }
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.GMAIL,
-            pass: process.env.PASS
+        const user = await User.findOne({ gmail });
+        if (user) {
+            return res.status(400).json({ ok: false, message: "Already registered" });
         }
-    })
 
-    const gamilOptions = {
-        from: process.env.GMAIL,
-        to: gmail,
-        subject: "Verification Code",
-        text: `Your verification code is ${code}`
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.GMAIL,
+                pass: process.env.PASS
+            }
+        });
+
+        await transporter.sendMail({
+            from: process.env.GMAIL,
+            to: gmail,
+            subject: "Verification Code",
+            text: `Your verification code is ${code}`
+        });
+
+        console.log("mail sent!");
+        res.status(200).json({ ok: true, code });
+
+    } catch(err) {
+        console.error("ERROR:", err.message);
+        res.status(500).json({ ok: false, message: err.message });
     }
-    await transporter.sendMail(gamilOptions);
-    res.status(200).json({
-        ok: true,
-        code
-    });
-});
+};
 
 const Login = catchAsync(async(req, res, next) =>{
     const { gmail, password } = req.body;
