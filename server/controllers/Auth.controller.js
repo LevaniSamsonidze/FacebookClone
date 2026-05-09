@@ -1,7 +1,7 @@
 const User = require("../modules/User.modules");
 const { AppError } = require("../utils/AppErrorHandler");
 const catchAsync = require("../utils/catchAsync");
-const { Resend } = require('resend');
+const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -28,28 +28,42 @@ const SignUp = async (req, res) =>{
 
 const verifyGmail = catchAsync(async(req, res, next) => {
     const { gmail } = req.body;
-    const code = Math.floor(100000 + Math.random() * 900000);
+
+    if (!gmail) {
+        return next(new AppError("იმეილი საჭიროა.", 400));
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(gmail)) {
+        return next(new AppError("იმეილი არასწორი ფორმატისაა.", 400));
+    }
 
     const user = await User.findOne({ gmail });
     if (user) {
-        return next(new AppError(`This ${gmail} user is already registered.`, 400));
+        return next(new AppError(`${gmail} უკვე რეგისტრირებულია.`, 400));
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const code = Math.floor(100000 + Math.random() * 900000);
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.GMAIL,
+            pass: process.env.PASS
+        }
+    });
+
+    const mailOptions = {
+        from: process.env.GMAIL,
+        to: gmail,
+        subject: "Verification Code",
+        text: `Your verification code is ${code}`
+    };
 
     try {
-        const data = await resend.emails.send({
-            from: 'Your App <onboarding@resend.dev>',
-            to: gmail,
-            subject: 'Hello World',
-            html: 'gamarjoba gamarjoba gamarjpbaaa!!!'
-        });
-
-        console.log("EMAIL SENT:", data);
-
+        await transporter.sendMail(mailOptions);
     } catch (err) {
-        console.log("EMAIL ERROR:", err);
-        return next(err);
+        return next(new AppError("იმეილის გაგზავნა ვერ მოხერხდა. სცადე მოგვიანებით.", 500));
     }
 
     res.status(200).json({
@@ -57,6 +71,7 @@ const verifyGmail = catchAsync(async(req, res, next) => {
         code
     });
 });
+
 
 const Login = catchAsync(async(req, res, next) =>{
     const { gmail, password } = req.body;
