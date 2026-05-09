@@ -1,7 +1,7 @@
 const User = require("../modules/User.modules");
 const { AppError } = require("../utils/AppErrorHandler");
 const catchAsync = require("../utils/catchAsync");
-const nodemailer = require("nodemailer");
+const { Resend } = require('resend');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -34,21 +34,16 @@ const verifyGmail = catchAsync(async(req, res, next) => {
     if (user) {
         return next(new AppError(`This ${gmail} user is already registered.`, 400));
     }
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.GMAIL,
-            pass: process.env.PASS
-        }
-    })
 
-    const gamilOptions = {
-        from: process.env.GMAIL,
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    await resend.emails.send({
+        from: 'onboarding@resend.dev',
         to: gmail,
-        subject: "Verification Code",
+        subject: 'Verification Code',
         text: `Your verification code is ${code}`
-    }
-    await transporter.sendMail(gamilOptions);
+    });
+
     res.status(200).json({
         ok: true,
         code
