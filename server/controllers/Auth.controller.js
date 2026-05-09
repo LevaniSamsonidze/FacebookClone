@@ -35,9 +35,7 @@ const verifyGmail = catchAsync(async(req, res, next) => {
         return next(new AppError(`This ${gmail} user is already registered.`, 400));
     }
     const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+        service: "gmail",
         auth: {
             user: process.env.GMAIL,
             pass: process.env.PASS
