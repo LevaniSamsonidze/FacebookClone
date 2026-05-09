@@ -35,17 +35,12 @@ const verifyGmail = catchAsync(async(req, res, next) => {
         return next(new AppError(`This ${gmail} user is already registered.`, 400));
     }
     const transporter = nodemailer.createTransport({
-        host: "smtp-mail.outlook.com",
-        port: 587,
-        secure: false,
+        service: "gmail",
         auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            ciphers: "SSLv3"
+            user: process.env.GMAIL,
+            pass: process.env.PASS
         }
-    });
+    })
 
     const gamilOptions = {
         from: process.env.GMAIL,
