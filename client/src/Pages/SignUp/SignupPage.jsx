@@ -45,35 +45,33 @@ function SignupPage() {
     return () => clearInterval(interval);
   }, [showPage])
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-
-  try {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
     const response = await fetch(`${API}/signup/verifyGmail`, {
       method: "POST",
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify({ gmail })
-    });
-
+      body: JSON.stringify({
+        gmail: gmail
+      })
+    })
     const data = await response.json();
 
-    if (data.ok) {
+    if(data.ok){
       setCode(data.code);
+      setLoading(false);
       setShowPage(true);
-    } else {
-      toast.error(data.message || "Something went wrong.");
+    }else if(!data.ok){
+      toast.error(data.message);
+      setLoading(false);
+    }else{
+      setLoading(false);
+      toast.error("An error occurred. Please try again. 500");
     }
 
-  } catch (err) {
-    toast.error("სერვერთან კავშირი ვერ მოხერხდა.");
-    console.error(err);
-  } finally {
-    setLoading(false); // ყოველთვის გამოირთვება
-  }
-};
+  };
 
   const onSubmitCode = async (e) =>{
     e.preventDefault();

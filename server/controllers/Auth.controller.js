@@ -28,50 +28,37 @@ const SignUp = async (req, res) =>{
 
 const verifyGmail = catchAsync(async(req, res, next) => {
     const { gmail } = req.body;
-
-    if (!gmail) {
-        return next(new AppError("იმეილი საჭიროა.", 400));
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(gmail)) {
-        return next(new AppError("იმეილი არასწორი ფორმატისაა.", 400));
-    }
+    const code = Math.floor(100000 + Math.random() * 900000);
 
     const user = await User.findOne({ gmail });
     if (user) {
-        return next(new AppError(`${gmail} უკვე რეგისტრირებულია.`, 400));
+        return next(new AppError(`This ${gmail} user is already registered.`, 400));
     }
-
-    const code = Math.floor(100000 + Math.random() * 900000);
-
     const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: "smtp-mail.outlook.com",
+        port: 587,
+        secure: false,
         auth: {
-            user: process.env.GMAIL,
-            pass: process.env.PASS
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS
+        },
+        tls: {
+            ciphers: "SSLv3"
         }
     });
 
-    const mailOptions = {
+    const gamilOptions = {
         from: process.env.GMAIL,
         to: gmail,
         subject: "Verification Code",
         text: `Your verification code is ${code}`
-    };
-
-    try {
-        await transporter.sendMail(mailOptions);
-    } catch (err) {
-        return next(new AppError("იმეილის გაგზავნა ვერ მოხერხდა. სცადე მოგვიანებით.", 500));
     }
-
+    await transporter.sendMail(gamilOptions);
     res.status(200).json({
         ok: true,
         code
     });
 });
-
 
 const Login = catchAsync(async(req, res, next) =>{
     const { gmail, password } = req.body;
