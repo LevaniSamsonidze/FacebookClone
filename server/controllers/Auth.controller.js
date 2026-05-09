@@ -37,12 +37,20 @@ const verifyGmail = catchAsync(async(req, res, next) => {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: gmail,
-        subject: 'Hello World',
-        html: 'gamarjoba gamarjoba gamarjpbaaa!!!'
-    });
+    try {
+        const data = await resend.emails.send({
+            from: 'Your App <onboarding@resend.dev>',
+            to: gmail,
+            subject: 'Hello World',
+            html: 'gamarjoba gamarjoba gamarjpbaaa!!!'
+        });
+
+        console.log("EMAIL SENT:", data);
+
+    } catch (err) {
+        console.log("EMAIL ERROR:", err);
+        return next(err);
+    }
 
     res.status(200).json({
         ok: true,
