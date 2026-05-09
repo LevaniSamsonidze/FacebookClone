@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { API } from "../../API/API";
 import { useState } from "react";
 import Navbar from "../../components/MainPage.navbar";
 import { toast } from "react-toastify";
 import { stringify } from "uuid";
+
+const API = import.meta.env.VITE_API;
 
 const Posts = () =>{
     const [admin, setAdmin] = useState(false)

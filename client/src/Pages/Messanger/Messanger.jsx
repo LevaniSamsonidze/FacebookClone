@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { socket } from "../../API/Socket.API";
 import { useState } from "react";
-import { API } from "../../API/API";
 import Navbar from "../../components/MainPage.navbar";
 
+const API = import.meta.env.VITE_API;
 const token = localStorage.getItem("token");
 
 const Messanger = () =>{

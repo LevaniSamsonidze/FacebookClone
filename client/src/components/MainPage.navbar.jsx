@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API } from "../API/API";
 
+const API = import.meta.env.VITE_API;
 const token = localStorage.getItem("token")
 
 const Navbar = () => {

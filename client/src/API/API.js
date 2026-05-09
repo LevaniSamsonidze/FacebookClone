@@ -1,1 +1,0 @@
-export const API = "https://facebookclone-45ym.onrender.com/api";

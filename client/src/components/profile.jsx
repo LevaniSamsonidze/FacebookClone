@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom"
-import { API } from "../API/API";
 import Navbar from "./MainPage.navbar";
 
+const API = import.meta.env.VITE_API;
 const token = localStorage.getItem("token")
 
 const Profile = () =>{

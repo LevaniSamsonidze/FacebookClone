@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { API } from "../../API/API";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from 'react-toastify';
 import { useEffect } from "react";
 import LoginPageNavbar from "../../components/LoginPage.navbar";
 import { useNavigate } from "react-router-dom";
+
+const API = import.meta.env.VITE_API;
 
 function SignupPage() {
   const [gmail, setGmail] = useState("");

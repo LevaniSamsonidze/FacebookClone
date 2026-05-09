@@ -1,10 +1,9 @@
-import { API } from "../../API/API";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/MainPage.navbar";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-
+const API = import.meta.env.VITE_API;
 const token = localStorage.getItem("token")
 
 const FriendsPage = () => {

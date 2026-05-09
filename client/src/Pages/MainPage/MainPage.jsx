@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { API } from "../../API/API";
 import Navbar from "../../components/MainPage.navbar";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
+
+const API = import.meta.env.VITE_API;
 
 const MainPage = () => {
     const [fristName, setFirstName] = useState("");
