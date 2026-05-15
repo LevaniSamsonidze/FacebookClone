@@ -20,7 +20,7 @@ const Posts = () =>{
 
     useEffect(() =>{
         if(!token){
-            return navigate('/login')
+            navigate('/login')
         }
     },[])
 
